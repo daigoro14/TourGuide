@@ -1,6 +1,6 @@
 import Navigation from '@/components/Navigation'
 import React, { useState } from 'react'
-import { FlatList, StyleSheet,ScrollView, SafeAreaView, Text, View } from 'react-native'
+import { TouchableOpacity, StyleSheet, ScrollView, SafeAreaView, Text, View } from 'react-native'
 import FA from 'react-native-vector-icons/FontAwesome';
 import MCI from 'react-native-vector-icons/MaterialCommunityIcons';
 import FA6 from 'react-native-vector-icons/FontAwesome6';
@@ -12,31 +12,37 @@ import AnimatedComponent from '@/components/AnimatedComponent';
 const activeColor = '#ff6f6f';
 
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }) {
   const activities = [
     {
       name: 'Hotels',
-      icon: <FA name="hotel" color={activeColor} style={styles.icon}/>
+      icon: <FA name="hotel" color={activeColor} style={styles.icon}/>,
+      screen: 'Hotels'
     },
     {
       name: 'Activities',
-      icon: <MCI name="google-maps" style={styles.icon}/>
+      icon: <MCI name="google-maps" style={styles.icon}/>,
+      screen: null
     },
     {
       name: 'Tour Guides',
-      icon: <FA6 name="people-group" style={styles.icon}/>
+      icon: <FA6 name="people-group" style={styles.icon}/>,
+      screen: null
     },
     {
       name: 'Food & Drinks',
-      icon: <II name="restaurant" style={styles.icon}/>
+      icon: <II name="restaurant" style={styles.icon}/>,
+      screen: null
     },
     {
       name: 'History & Culture',
-      icon: <MCI name="book-open-variant" style={styles.icon}/>
+      icon: <MCI name="book-open-variant" style={styles.icon}/>,
+      screen: null
     },
     {
       name: 'Health',
-      icon: <AD name="heart" style={styles.icon}/>
+      icon: <AD name="heart" style={styles.icon}/>,
+      screen: null
     }
   ]
 
@@ -44,23 +50,24 @@ export default function HomeScreen() {
     <SafeAreaView style={styles.container}>
         <ScrollView contentContainerStyle={styles.contentContainer}>
           <View style={styles.content}>
-          {/* <FlatList
-          data={activities}
-          renderItem={({ item, index }) => <AnimatedComponent about={item} index={index} />}
-          keyExtractor={(item, index) => index.toString()}
-                /> */}
           {activities.map((activity, index) => {
             const borderColor = [activeColor, '#ffd70e', '#3a3a3a'][index % 3];
             const additionalStyle = index !== 0 ? { marginTop: -60 } : {};
             return (
-              <View key={index} style={[styles.iconContainer, index % 2 === 0 ? styles.icon1 : styles.icon2, additionalStyle]}>
-                <View style={[styles.circle, {borderColor}]} >{activity.icon}</View>
+              <TouchableOpacity
+                key={index}
+                style={[styles.iconContainer, index % 2 === 0 ? styles.icon1 : styles.icon2, additionalStyle]}
+                onPress={() => activity.screen && navigation.navigate(activity.screen)}
+              >
+                <View style={[styles.circle, { borderColor }]}>
+                  {activity.icon}
+                </View>
                 <Text>{activity.name}</Text>
-              </View>
+              </TouchableOpacity>
           )})}
           </View>
         </ScrollView>
-        <Navigation currentPage="home"/>
+        <Navigation currentPage="home" navigation={navigation}/>
     </SafeAreaView>
   )
 }
